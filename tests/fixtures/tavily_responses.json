@@ -1,0 +1,73 @@
+{
+  "rich": {
+    "results": [
+      {
+        "url": "https://example.org/controlled-study-2023",
+        "title": "A controlled study of remote software development output",
+        "content": "In a 2023 controlled study, remote developers committed 8% more code per week than their in-office peers, though the authors caution that commit volume is a weak proxy for value delivered."
+      },
+      {
+        "url": "https://example.org/developer-survey-2024",
+        "title": "Developer Survey 2024: working arrangements",
+        "content": "Self-reported productivity rose for 62% of surveyed remote developers, while 21% reported a decline concentrated among engineers with under two years of experience."
+      },
+      {
+        "url": "https://example.com/telemetry-collaboration",
+        "title": "Effects of remote work on collaboration networks",
+        "content": "Telemetry covering 61,000 employees showed collaboration networks became more siloed after the shift to remote work, with fewer bridging ties between teams."
+      },
+      {
+        "url": "https://example.net/code-review-latency",
+        "title": "Code review latency in distributed teams",
+        "content": "Median code review turnaround increased from 6 hours to 11 hours in distributed teams, with the largest increases spanning time zones more than four hours apart."
+      },
+      {
+        "url": "https://example.net/review-latency-followup",
+        "title": "Follow-up: review latency and team distribution",
+        "content": "A follow-up analysis confirmed the 6-to-11-hour median shift and attributed roughly half of the increase to reviewer availability windows rather than reviewer effort."
+      },
+      {
+        "url": "https://example.org/meta-analysis-remote",
+        "title": "Meta-analysis of remote work productivity findings",
+        "content": "Across 14 studies the pooled effect on productivity was small and not statistically distinguishable from zero, and heterogeneity between studies was high."
+      },
+      {
+        "url": "https://example.com/onboarding-remote",
+        "title": "Onboarding outcomes for remote engineering hires",
+        "content": "Remote hires reached their first independent production change 3 weeks later on average than in-office hires at the same companies."
+      }
+    ]
+  },
+
+  "duplicate_urls": {
+    "results": [
+      {
+        "url": "https://example.org/controlled-study-2023",
+        "title": "A controlled study of remote software development output",
+        "content": "In a 2023 controlled study, remote developers committed 8% more code per week than their in-office peers."
+      },
+      {
+        "url": "https://example.org/controlled-study-2023",
+        "title": "A controlled study of remote software development output (mirror)",
+        "content": "In a 2023 controlled study, remote developers committed 8% more code per week than their in-office peers."
+      },
+      {
+        "url": "https://example.org/developer-survey-2024",
+        "title": "Developer Survey 2024: working arrangements",
+        "content": "Self-reported productivity rose for 62% of surveyed remote developers."
+      }
+    ]
+  },
+
+  "thin": {
+    "results": [
+      {
+        "url": "https://example.org/single-source",
+        "title": "One lonely blog post",
+        "content": "Remote work is great, in my experience."
+      }
+    ]
+  },
+
+  "empty": { "results": [] }
+}
