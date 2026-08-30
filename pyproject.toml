@@ -1,0 +1,19 @@
+[project]
+name = "citewise"
+version = "0.1.0"
+description = "Multi-agent research report writer with a claim-verification loop"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "app", "eval", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["citewise", "tests", "app", "eval"]
