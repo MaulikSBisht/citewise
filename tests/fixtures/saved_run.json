@@ -1,0 +1,172 @@
+{
+  "topic": "Does remote work increase developer productivity?",
+  "sub_questions": [
+    "What does controlled research say about remote work and developer output?",
+    "How does remote work affect collaboration and code review latency?",
+    "What do large-scale industry telemetry studies report?",
+    "Where do the findings disagree, and why?"
+  ],
+  "evidence": [
+    {
+      "id": "e1",
+      "url": "https://example.org/controlled-study-2023",
+      "title": "A controlled study of remote software development output",
+      "snippet": "In a 2023 controlled study, remote developers committed 8% more code per week than their in-office peers, though the authors caution that commit volume is a weak proxy for value delivered.",
+      "sub_question": "What does controlled research say about remote work and developer output?"
+    },
+    {
+      "id": "e2",
+      "url": "https://example.org/developer-survey-2024",
+      "title": "Developer Survey 2024: working arrangements",
+      "snippet": "Self-reported productivity rose for 62% of surveyed remote developers, while 21% reported a decline concentrated among engineers with under two years of experience.",
+      "sub_question": "What does controlled research say about remote work and developer output?"
+    },
+    {
+      "id": "e3",
+      "url": "https://example.com/telemetry-collaboration",
+      "title": "Effects of remote work on collaboration networks",
+      "snippet": "Telemetry covering 61,000 employees showed collaboration networks became more siloed after the shift to remote work, with fewer bridging ties between teams.",
+      "sub_question": "How does remote work affect collaboration and code review latency?"
+    },
+    {
+      "id": "e4",
+      "url": "https://example.net/code-review-latency",
+      "title": "Code review latency in distributed teams",
+      "snippet": "Median code review turnaround increased from 6 hours to 11 hours in distributed teams, with the largest increases spanning time zones more than four hours apart.",
+      "sub_question": "How does remote work affect collaboration and code review latency?"
+    },
+    {
+      "id": "e5",
+      "url": "https://example.net/review-latency-followup",
+      "title": "Follow-up: review latency and team distribution",
+      "snippet": "A follow-up analysis confirmed the 6-to-11-hour median shift and attributed roughly half of the increase to reviewer availability windows rather than reviewer effort.",
+      "sub_question": "What do large-scale industry telemetry studies report?"
+    },
+    {
+      "id": "e6",
+      "url": "https://example.org/meta-analysis-remote",
+      "title": "Meta-analysis of remote work productivity findings",
+      "snippet": "Across 14 studies the pooled effect on productivity was small and not statistically distinguishable from zero, and heterogeneity between studies was high.",
+      "sub_question": "What do large-scale industry telemetry studies report?"
+    },
+    {
+      "id": "e7",
+      "url": "https://example.com/onboarding-remote",
+      "title": "Onboarding outcomes for remote engineering hires",
+      "snippet": "Remote hires reached their first independent production change 3 weeks later on average than in-office hires at the same companies.",
+      "sub_question": "Where do the findings disagree, and why?"
+    }
+  ],
+  "draft": {
+    "title": "Remote Work and Developer Productivity",
+    "sections": [
+      {
+        "heading": "Measured Output",
+        "claim_ids": [
+          "c1",
+          "c2"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "id": "c1",
+        "text": "A 2023 controlled study found remote developers committed 8% more code per week than their in-office peers.",
+        "evidence_ids": [
+          "e1"
+        ],
+        "verdict": "SUPPORTED",
+        "verdict_reason": "The cited chunk states the 8% figure directly."
+      },
+      {
+        "id": "c2",
+        "text": "Self-reported productivity rose for 62% of surveyed remote developers.",
+        "evidence_ids": [
+          "e2"
+        ],
+        "verdict": "SUPPORTED",
+        "verdict_reason": "The cited chunk states the 8% figure directly."
+      }
+    ]
+  },
+  "retry_count": 1,
+  "final_report": "# Remote Work and Developer Productivity\n\n## Measured Output\n\n- A 2023 controlled study found remote developers committed 8% more code per week than their in-office peers. [1]\n- Self-reported productivity rose for 62% of surveyed remote developers. [2]\n\n## Sources\n\n1. [A controlled study of remote software development output](https://example.org/controlled-study-2023)\n2. [Developer Survey 2024: working arrangements](https://example.org/developer-survey-2024)\n",
+  "trace": [
+    {
+      "node": "planner",
+      "sub_questions": [
+        "What does controlled research say about remote work and developer output?",
+        "How does remote work affect collaboration and code review latency?",
+        "What do large-scale industry telemetry studies report?",
+        "Where do the findings disagree, and why?"
+      ]
+    },
+    {
+      "node": "searcher",
+      "queries": [
+        "What does controlled research say about remote work and developer output?",
+        "How does remote work affect collaboration and code review latency?",
+        "What do large-scale industry telemetry studies report?",
+        "Where do the findings disagree, and why?"
+      ],
+      "chunks_retrieved": 7
+    },
+    {
+      "node": "writer",
+      "mode": "draft",
+      "title": "Remote Work and Developer Productivity",
+      "claims": 2,
+      "sections": 1
+    },
+    {
+      "node": "verifier",
+      "round": 0,
+      "verified": 2,
+      "results": [
+        {
+          "claim_id": "c1",
+          "verdict": "SUPPORTED",
+          "reason": "The cited chunk states the 8% figure directly."
+        },
+        {
+          "claim_id": "c2",
+          "verdict": "UNSUPPORTED",
+          "reason": "The cited evidence discusses one company and does not support a claim about every industry."
+        }
+      ]
+    },
+    {
+      "node": "writer",
+      "mode": "revision",
+      "round": 1,
+      "revised": [
+        "c2"
+      ],
+      "frozen": [
+        "c1"
+      ],
+      "title": "Remote Work and Developer Productivity",
+      "claims": 2,
+      "sections": 1
+    },
+    {
+      "node": "verifier",
+      "round": 1,
+      "verified": 1,
+      "results": [
+        {
+          "claim_id": "c2",
+          "verdict": "SUPPORTED",
+          "reason": "The cited chunk states the 8% figure directly."
+        }
+      ]
+    },
+    {
+      "node": "finalizer",
+      "dropped_contradicted": [],
+      "kept_unverified": [],
+      "claims_shipped": 2
+    }
+  ],
+  "aborted_reason": null
+}

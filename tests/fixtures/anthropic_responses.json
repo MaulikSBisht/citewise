@@ -19,6 +19,12 @@
 
   "schema_violation_empty_evidence": "{\"title\": \"R\", \"sections\": [{\"heading\": \"S\", \"claim_ids\": [\"c1\"]}], \"claims\": [{\"id\": \"c1\", \"text\": \"An unsourced assertion.\", \"evidence_ids\": []}]}",
 
+  "revision_c2": "{\"claims\": [{\"id\": \"c2\", \"text\": \"Self-reported productivity rose for 62% of surveyed remote developers.\", \"evidence_ids\": [\"e2\"]}]}",
+
+  "revision_both": "{\"claims\": [{\"id\": \"c1\", \"text\": \"A revised first claim.\", \"evidence_ids\": [\"e1\"]}, {\"id\": \"c2\", \"text\": \"A revised second claim.\", \"evidence_ids\": [\"e2\"]}]}",
+
+  "revision_empty": "{\"claims\": []}",
+
   "verifier_supported": "{\"verdict\": \"SUPPORTED\", \"reason\": \"The cited chunk states the 8% figure directly.\"}",
 
   "verifier_unsupported": "{\"verdict\": \"UNSUPPORTED\", \"reason\": \"The cited evidence discusses one company and does not support a claim about every industry.\"}",

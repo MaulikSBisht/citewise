@@ -19,8 +19,19 @@ def drive(anthropic_responses, tavily_payloads=None, **cfg):
 
 
 class TestHappyPath:
+    """`writer_ok` produces three claims, so a clean run costs three verifier calls
+    and never loops back to the writer."""
+
+    CLEAN_RUN = [
+        canned("planner_ok"),
+        canned("writer_ok"),
+        canned("verifier_supported"),
+        canned("verifier_supported"),
+        canned("verifier_supported"),
+    ]
+
     def test_topic_to_report_draft(self):
-        final = drive([canned("planner_ok"), canned("writer_ok")])
+        final = drive(self.CLEAN_RUN)
 
         assert final["aborted_reason"] is None
         assert isinstance(final["draft"], ReportDraft)
@@ -29,18 +40,24 @@ class TestHappyPath:
         assert len(final["evidence"]) >= 6
 
     def test_every_claim_cites_evidence_that_exists(self):
-        final = drive([canned("planner_ok"), canned("writer_ok")])
+        final = drive(self.CLEAN_RUN)
         pool = {c.id for c in final["evidence"]}
         for claim in final["draft"].claims:
             assert claim.evidence_ids
             assert set(claim.evidence_ids) <= pool
 
     def test_trace_records_each_node_in_order(self):
-        final = drive([canned("planner_ok"), canned("writer_ok")])
-        assert [t["node"] for t in final["trace"]] == ["planner", "searcher", "writer"]
+        final = drive(self.CLEAN_RUN)
+        assert [t["node"] for t in final["trace"]] == [
+            "planner",
+            "searcher",
+            "writer",
+            "verifier",
+            "finalizer",
+        ]
 
-    def test_retry_count_untouched_on_the_forward_path(self):
-        assert drive([canned("planner_ok"), canned("writer_ok")])["retry_count"] == 0
+    def test_retry_count_untouched_when_nothing_fails(self):
+        assert drive(self.CLEAN_RUN)["retry_count"] == 0
 
 
 class TestRejection:

@@ -121,15 +121,24 @@ def tavily_payload(name: str) -> dict:
 
 
 def partitioned(name: str, n_queries: int) -> list[dict]:
-    """Split a canned payload round-robin across `n_queries` payloads.
+    """Split a canned payload into `n_queries` consecutive chunks.
 
     Distinct sub-questions retrieve mostly distinct sources in reality. Handing
     every query the same payload instead makes the searcher's URL dedupe eat all
     but the first query's results, which is correct behaviour but a poor stand-in
     for a real run.
+
+    The split is consecutive, not round-robin, so evidence ID `eN` maps to the
+    Nth result in the fixture. The canned writer and revision payloads cite IDs
+    by that mapping — round-robin would silently pair each claim with an
+    unrelated source and make the fixtures incoherent.
     """
     results = TAVILY[name]["results"]
-    buckets: list[list[dict]] = [[] for _ in range(n_queries)]
-    for i, result in enumerate(results):
-        buckets[i % n_queries].append(result)
+    size, extra = divmod(len(results), n_queries)
+    buckets: list[list[dict]] = []
+    start = 0
+    for i in range(n_queries):
+        take = size + (1 if i < extra else 0)
+        buckets.append(results[start : start + take])
+        start += take
     return [{"results": bucket} for bucket in buckets]
