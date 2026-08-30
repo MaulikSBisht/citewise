@@ -43,6 +43,41 @@ class TestEnvOverrides:
         assert load_config(use_dotenv=False).writer_model == "claude-opus-5"
 
 
+class TestWorkspaceId:
+    """Identity-linked API keys 400 without a workspace id; plain keys ignore it."""
+
+    def test_read_from_env(self, monkeypatch):
+        monkeypatch.setenv("ANTHROPIC_WORKSPACE_ID", "wrkspc_test")
+        assert load_config(use_dotenv=False).anthropic_workspace_id == "wrkspc_test"
+
+    def test_absent_by_default(self, monkeypatch):
+        monkeypatch.delenv("ANTHROPIC_WORKSPACE_ID", raising=False)
+        assert load_config(use_dotenv=False).anthropic_workspace_id is None
+
+    def test_header_sent_only_when_set(self, monkeypatch):
+        import anthropic
+
+        from citewise.llm import StructuredLLM
+
+        captured = {}
+
+        def fake_anthropic(**kwargs):
+            captured.update(kwargs)
+            return object()
+
+        monkeypatch.setattr(anthropic, "Anthropic", fake_anthropic)
+
+        StructuredLLM(config=Config(anthropic_api_key="k", tavily_api_key="t"))
+        assert captured["default_headers"] is None
+
+        StructuredLLM(
+            config=Config(
+                anthropic_api_key="k", tavily_api_key="t", anthropic_workspace_id="wrkspc_1"
+            )
+        )
+        assert captured["default_headers"] == {"anthropic-workspace-id": "wrkspc_1"}
+
+
 class TestRunsDir:
     def test_defaults_under_the_project_root(self, monkeypatch):
         monkeypatch.delenv("CITEWISE_RUNS_DIR", raising=False)

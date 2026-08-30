@@ -43,6 +43,11 @@ class Config(BaseModel):
 
     anthropic_api_key: str | None = None
     tavily_api_key: str | None = None
+    # Identity-linked API keys must name the workspace each request acts in, or
+    # the API returns 400. Plain keys ignore it. The SDK only reads
+    # ANTHROPIC_WORKSPACE_ID on the workload-identity path, so it is sent as an
+    # explicit header instead.
+    anthropic_workspace_id: str | None = None
 
     def require_keys(self) -> None:
         """Fail loudly before spending time on a run that cannot finish."""
@@ -93,4 +98,5 @@ def load_config(use_dotenv: bool = True) -> Config:
         max_tokens=_int_env("CITEWISE_MAX_TOKENS", 16000),
         anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY") or None,
         tavily_api_key=os.environ.get("TAVILY_API_KEY") or None,
+        anthropic_workspace_id=os.environ.get("ANTHROPIC_WORKSPACE_ID") or None,
     )

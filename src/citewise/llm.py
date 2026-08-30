@@ -122,7 +122,12 @@ class StructuredLLM:
         import anthropic
 
         self.config.require_keys()
-        return anthropic.Anthropic(api_key=self.config.anthropic_api_key)
+        headers = (
+            {"anthropic-workspace-id": self.config.anthropic_workspace_id}
+            if self.config.anthropic_workspace_id
+            else None
+        )
+        return anthropic.Anthropic(api_key=self.config.anthropic_api_key, default_headers=headers)
 
     def complete_structured(
         self,
