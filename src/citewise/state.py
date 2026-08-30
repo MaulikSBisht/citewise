@@ -5,6 +5,7 @@ list is invalid and is rejected here, at the schema level, rather than being
 tolerated and papered over downstream.
 """
 
+import operator
 from typing import Annotated, Literal, TypedDict
 
 from pydantic import BaseModel, Field, StringConstraints, field_validator, model_validator
@@ -94,5 +95,21 @@ class ResearchState(TypedDict):
     draft: ReportDraft | None
     retry_count: int
     final_report: str | None
-    trace: list[dict]
+    # `operator.add` makes this an accumulator: each node returns only the
+    # entries it added and LangGraph appends them. Without a reducer the writer
+    # and verifier would overwrite each other's trace on every retry round.
+    trace: Annotated[list[dict], operator.add]
     aborted_reason: str | None
+
+
+def initial_state(topic: str) -> ResearchState:
+    return ResearchState(
+        topic=topic,
+        sub_questions=[],
+        evidence=[],
+        draft=None,
+        retry_count=0,
+        final_report=None,
+        trace=[],
+        aborted_reason=None,
+    )

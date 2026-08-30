@@ -118,3 +118,18 @@ def tavily_payload(name: str) -> dict:
     if name not in TAVILY:
         raise KeyError(f"unknown Tavily fixture {name!r}")
     return TAVILY[name]
+
+
+def partitioned(name: str, n_queries: int) -> list[dict]:
+    """Split a canned payload round-robin across `n_queries` payloads.
+
+    Distinct sub-questions retrieve mostly distinct sources in reality. Handing
+    every query the same payload instead makes the searcher's URL dedupe eat all
+    but the first query's results, which is correct behaviour but a poor stand-in
+    for a real run.
+    """
+    results = TAVILY[name]["results"]
+    buckets: list[list[dict]] = [[] for _ in range(n_queries)]
+    for i, result in enumerate(results):
+        buckets[i % n_queries].append(result)
+    return [{"results": bucket} for bucket in buckets]
