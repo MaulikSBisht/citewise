@@ -9,13 +9,15 @@ MAX_RETRIES. That gives at most 1 + MAX_RETRIES writer passes.
 """
 
 import json
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from langgraph.graph import END, StateGraph
 
-from citewise.config import RUNS_DIR, Config, load_config
+from citewise.config import Config, load_config
+from citewise.config import runs_dir as config_runs_dir
 from citewise.llm import StructuredLLM
 from citewise.nodes.finalizer import make_finalizer_node
 from citewise.nodes.planner import make_planner_node
@@ -100,7 +102,7 @@ def state_to_dict(state: ResearchState) -> dict:
 
 def save_run(state: ResearchState, runs_dir: Path | None = None) -> Path:
     """Persist a run as `runs/<timestamp>.json` so eval and demos can replay it."""
-    runs_dir = runs_dir or RUNS_DIR
+    runs_dir = runs_dir or config_runs_dir()
     runs_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%f")
     path = runs_dir / f"{stamp}.json"
@@ -131,6 +133,21 @@ def run(
     if persist:
         save_run(final, runs_dir)
     return final
+
+
+def stream_run(
+    topic: str,
+    llm: StructuredLLM,
+    searcher: EvidenceSearcher,
+    config: Config | None = None,
+) -> Iterator[ResearchState]:
+    """Yield a full state snapshot after each graph step.
+
+    The UI needs to show progress as it happens; which node just ran is readable
+    from the last `trace` entry, so no separate event channel is needed.
+    """
+    config = config or Config()
+    yield from build_graph(llm, searcher, config).stream(initial_state(topic), stream_mode="values")
 
 
 def build_default_graph() -> Any:

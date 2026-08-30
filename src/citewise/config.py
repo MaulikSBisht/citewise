@@ -14,6 +14,21 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RUNS_DIR = PROJECT_ROOT / "runs"
 
 
+def runs_dir() -> Path:
+    """Where runs are written and replayed from. Overridable so the UI and its
+    tests can point at a fixture directory."""
+    override = os.environ.get("CITEWISE_RUNS_DIR")
+    return Path(override) if override else RUNS_DIR
+
+
+def list_runs() -> list[Path]:
+    """Saved runs, newest first."""
+    directory = runs_dir()
+    if not directory.is_dir():
+        return []
+    return sorted(directory.glob("*.json"), reverse=True)
+
+
 class Config(BaseModel):
     max_sub_questions: int = Field(default=5, ge=1)
     results_per_question: int = Field(default=5, ge=1)
@@ -60,9 +75,11 @@ def load_config(use_dotenv: bool = True) -> Config:
     """Build a Config from the environment, optionally loading `.env` first.
 
     Tests pass `use_dotenv=False` so a developer's real `.env` cannot leak into
-    a test run.
+    a test run. `CITEWISE_DISABLE_DOTENV=1` does the same for code that calls
+    `load_config()` with no arguments — the Streamlit app, whose no-key
+    behaviour has to be testable on a machine that does have keys.
     """
-    if use_dotenv:
+    if use_dotenv and os.environ.get("CITEWISE_DISABLE_DOTENV") != "1":
         load_dotenv(PROJECT_ROOT / ".env")
 
     return Config(

@@ -3,7 +3,7 @@ be readable from config rather than hardcoded at a call site."""
 
 import pytest
 
-from citewise.config import Config, load_config
+from citewise.config import Config, list_runs, load_config, runs_dir
 
 
 class TestDefaults:
@@ -41,6 +41,33 @@ class TestEnvOverrides:
     def test_models_read_from_env(self, monkeypatch):
         monkeypatch.setenv("CITEWISE_WRITER_MODEL", "claude-opus-5")
         assert load_config(use_dotenv=False).writer_model == "claude-opus-5"
+
+
+class TestRunsDir:
+    def test_defaults_under_the_project_root(self, monkeypatch):
+        monkeypatch.delenv("CITEWISE_RUNS_DIR", raising=False)
+        assert runs_dir().name == "runs"
+
+    def test_env_override(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("CITEWISE_RUNS_DIR", str(tmp_path))
+        assert runs_dir() == tmp_path
+
+    def test_list_runs_is_newest_first(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("CITEWISE_RUNS_DIR", str(tmp_path))
+        for name in ("20260101T000000.json", "20260301T000000.json", "20260201T000000.json"):
+            (tmp_path / name).write_text("{}", encoding="utf-8")
+        assert [p.name for p in list_runs()][0] == "20260301T000000.json"
+
+    def test_missing_directory_lists_nothing(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("CITEWISE_RUNS_DIR", str(tmp_path / "absent"))
+        assert list_runs() == []
+
+    def test_dotenv_can_be_disabled_by_env(self, monkeypatch):
+        """The app's no-key path must stay testable on a machine that has keys."""
+        monkeypatch.setenv("CITEWISE_DISABLE_DOTENV", "1")
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.delenv("TAVILY_API_KEY", raising=False)
+        assert load_config().anthropic_api_key is None
 
 
 class TestValidation:
