@@ -94,6 +94,29 @@ class StructuredLLM:
     def __init__(self, client: Any = None, config: Config | None = None):
         self.config = config or Config()
         self.client = client if client is not None else self._build_client()
+        # Per-call token usage, so the eval can price a run. Repair attempts are
+        # recorded too — a retry is real spend and hiding it would understate cost.
+        self.usage: list[dict[str, Any]] = []
+
+    def reset_usage(self) -> None:
+        self.usage = []
+
+    def usage_totals(self) -> dict[str, int]:
+        return {
+            "calls": len(self.usage),
+            "input_tokens": sum(u["input_tokens"] for u in self.usage),
+            "output_tokens": sum(u["output_tokens"] for u in self.usage),
+        }
+
+    def _record_usage(self, model: str, message: Any) -> None:
+        usage = getattr(message, "usage", None)
+        self.usage.append(
+            {
+                "model": model,
+                "input_tokens": int(getattr(usage, "input_tokens", 0) or 0),
+                "output_tokens": int(getattr(usage, "output_tokens", 0) or 0),
+            }
+        )
 
     def _build_client(self) -> Any:
         import anthropic
@@ -122,6 +145,7 @@ class StructuredLLM:
                 messages=messages,
                 output_config={"format": {"type": "json_schema", "schema": json_schema}},
             )
+            self._record_usage(model, message)
 
             if getattr(message, "stop_reason", None) == "refusal":
                 # Not a formatting problem — a retry would only refuse again.

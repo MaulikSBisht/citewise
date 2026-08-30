@@ -1,0 +1,56 @@
+# Eval topics.
+#
+# Half are clean factual subjects where credible sources broadly agree; half are
+# contested or ambiguous, where sources disagree or the evidence is mixed. The
+# contested half is where the verifier earns its keep — a no-loop baseline tends
+# to resolve disagreement by asserting one side, and the verifier should catch
+# claims that outrun their evidence.
+#
+# `labeling_sample: true` marks the three topics sampled into
+# eval/labeling_sheet.csv for human verdicts.
+
+topics:
+  # --- clean factual ---
+  - id: t01
+    kind: clean
+    topic: What is the James Webb Space Telescope's mirror diameter and orbit?
+
+  - id: t02
+    kind: clean
+    topic: How does the CRISPR-Cas9 system introduce a targeted double-strand break?
+
+  - id: t03
+    kind: clean
+    topic: What were the stated causes and timeline of the 2021 Suez Canal blockage?
+    labeling_sample: true
+
+  - id: t04
+    kind: clean
+    topic: What is the current scientific consensus on the age of the universe, and how is it measured?
+
+  - id: t05
+    kind: clean
+    topic: How does the EU General Data Protection Regulation define a data controller versus a processor?
+
+  # --- contested / ambiguous ---
+  - id: t06
+    kind: contested
+    topic: Does remote work increase software developer productivity?
+    labeling_sample: true
+
+  - id: t07
+    kind: contested
+    topic: Do minimum wage increases reduce employment?
+
+  - id: t08
+    kind: contested
+    topic: Is nuclear power cost-competitive with utility-scale solar and wind?
+    labeling_sample: true
+
+  - id: t09
+    kind: contested
+    topic: How effective are school smartphone bans at improving student outcomes?
+
+  - id: t10
+    kind: contested
+    topic: Does intermittent fasting outperform continuous calorie restriction for weight loss?

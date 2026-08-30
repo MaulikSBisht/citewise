@@ -121,6 +121,27 @@ class TestDegenerateResponses:
         assert client.call_count == 1, "a refusal is not repairable — do not spend a retry"
 
 
+class TestUsageTracking:
+    def test_records_tokens_per_call(self):
+        llm, _ = make_llm([canned("planner_ok")])
+        llm.complete_structured("s", "u", Plan, "claude-haiku-4-5")
+        assert llm.usage == [
+            {"model": "claude-haiku-4-5", "input_tokens": 100, "output_tokens": 50}
+        ]
+
+    def test_repair_attempts_are_counted_as_spend(self):
+        """A retry costs real money — hiding it would understate the eval's cost."""
+        llm, _ = make_llm([canned("malformed_truncated"), canned("planner_ok")])
+        llm.complete_structured("s", "u", Plan, "m")
+        assert llm.usage_totals() == {"calls": 2, "input_tokens": 200, "output_tokens": 100}
+
+    def test_reset_usage(self):
+        llm, _ = make_llm([canned("planner_ok")])
+        llm.complete_structured("s", "u", Plan, "m")
+        llm.reset_usage()
+        assert llm.usage_totals()["calls"] == 0
+
+
 class TestStrictJSONSchema:
     def test_objects_get_additional_properties_false(self):
         schema = to_strict_json_schema(Plan)
