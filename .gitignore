@@ -26,3 +26,6 @@ eval/results/
 .DS_Store
 .idea/
 *.swp
+
+# Local agent/editor state
+.claude/settings.local.json
