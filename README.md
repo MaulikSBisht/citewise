@@ -193,7 +193,12 @@ elsewhere.)
 
 ## Sample output
 
-From the bundled fixture run
+The demo UI replaying that run — mode, config, the full step trace including the
+retry round, and the rendered report:
+
+![citewise replaying a saved run](docs/screenshot.png)
+
+The markdown itself, from the bundled fixture run
 ([tests/fixtures/saved_run.json](tests/fixtures/saved_run.json)) — mocked
 Anthropic/Tavily responses rather than live data, but the exact shape
 `render.py` produces:
